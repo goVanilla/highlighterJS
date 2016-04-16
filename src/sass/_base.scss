@@ -1,0 +1,14 @@
+.container
+{
+  width: 768px;
+  min-width: 320px;
+  @media only screen and (max-width: 855px) {
+    width: 90%;
+  }
+}
+
+.centered
+{
+  margin-right: auto;
+  margin-left: auto;
+}

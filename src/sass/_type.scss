@@ -1,0 +1,61 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
+
+body
+{
+  font-family: $font-family-base;
+  color: $midnight-blue;
+}
+
+
+// Headings
+// -------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: $headings-color;
+}
+
+h1,
+h2,
+h3 {
+  margin-top: $line-height-base;
+  margin-bottom: ($line-height-base / 2);
+}
+h4,
+h5,
+h6 {
+  margin-top: ($line-height-base / 2);
+  margin-bottom: ($line-height-base / 2);
+}
+
+h6 {
+  font-weight: normal;
+}
+
+h1 { font-size: $font-size-h1; } // ~62px
+h2 { font-size: $font-size-h2; } // ~52px
+h3 { font-size: $font-size-h3; } // ~40px
+h4 { font-size: $font-size-h4; } // ~29px
+h5 { font-size: $font-size-h5; } // ~28px
+h6 { font-size: $font-size-h6; } // ~24px
+
+
+// Body text
+// -------------------------
+
+p {
+  font-size:   $font-size-base;
+  line-height: $line-height-base;
+  margin: 0 0 ($line-height-base / 2);
+}
+
+
+// alignment
+// -------------------------
+
+.center-aligned
+{
+  text-align: center !important;
+}

@@ -1,0 +1,99 @@
+
+
+.highlighter-target, .highlighter-clone
+{
+  width: 100%;
+}
+.highlighter-target
+{
+  background: transparent;
+  position: relative;
+  z-index: 9;
+}
+.highlighter-clone
+{
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  color: transparent;
+  a
+  {
+    background-color: $peter-river;
+    padding: 0;
+    color: transparent;
+  }
+}
+
+.highlighter-List{
+  position: absolute;
+  max-width: 100%;
+  width: auto;
+  left: 0;
+  top: 30px;
+  padding: 3px 4px;
+  background-color: #34495e;
+  border-radius: 3px;
+  li
+  {
+    position: relative;
+    width: auto;
+    height: 30px;
+    color: #D6D6D6;
+    display: block;
+    border-bottom: 1px solid #ccc;
+    line-height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+
+    &:last-child
+    {
+      border-bottom: none;
+    }
+
+    &:hover, &.selected{
+      color: #fff;
+      background-color: #1abc9c;
+      border-bottom-color: #1abc9c;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+// this is a demo style
+.highlighter-element
+{
+  position: relative;
+  width: 50%;
+
+  .highlighter-target, .highlighter-clone
+  {
+    padding: 5px 11px;
+  }
+  .highlighter-target + .highlighter-clone
+  {
+    border-radius: $border-radius-base;
+    font-size: $font-size-base;
+    line-height: $input-line-height-base;
+  }
+
+  .highlighter-target.large + .highlighter-clone
+  {
+    border-radius: $border-radius-large;
+    font-size: $input-font-size-lg;
+    line-height: $input-line-height-lg;
+  }
+
+  .highlighter-target.small + .highlighter-clone
+  {
+    border-radius: $border-radius-small;
+    font-size: $input-font-size-sm;
+    line-height: $input-line-height-sm;
+  }
+
+}

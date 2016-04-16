@@ -1,28 +1,28 @@
-var app = {};
+
 /**
  * initiator
  */
-app.initiator = function (options) {
+function initiator (options) {
   options = options || {
-    selector : '.floatalk-autocomplete textarea',
-    sign: '#'
-  }
+      selector : '.highlighter-target',
+      sign: '#'
+    };
 
   //defining variables
   var textbox = null, parentElem = null, shadowElem = null, shadowHTML = '',
-      inputs = document.querySelectorAll(options.selector),
-      keyCodes = {'enter': 13, 'upArrow': 38, 'downArrow': 40, 'leftArrow': 37, 'rightArrow': 39, 'end': 35, 'home': 36 },
-      isNormalEvent = true,
-      keySequence = false,
-      menuFlag = false,
-      isHighlighting = false,
-      startPosition = -1,
-      mentionCollection = [],
+    inputs = document.querySelectorAll(options.selector),
+    keyCodes = {'enter': 13, 'upArrow': 38, 'downArrow': 40, 'leftArrow': 37, 'rightArrow': 39, 'end': 35, 'home': 36 },
+    isNormalEvent = true,
+    keySequence = false,
+    menuFlag = false,
+    isHighlighting = false,
+    startPosition = -1,
+    mentionCollection = [],
 
-      rehash = new RegExp("\\s\\" + options.sign + "(\\S+)", "gim"),
-      reSuggest = new RegExp( "\^" + options.sign + "[a-zA-Z0-9]+$"),
+    rehash = new RegExp("\\s\\" + options.sign + "(\\S+)", "gim"),
+    reSuggest = new RegExp( "\^" + options.sign + "[a-zA-Z0-9]+$"),
 
-      hashTemplate = ' <a href="' + options.linkTo + '/$1" target="_blank" rel="nofollow">' + options.sign + '$1</a>';
+    hashTemplate = ' <a href="' + options.linkTo + '/$1" target="_blank" rel="nofollow">' + options.sign + '$1</a>';
 
   for (var i = 0; i < inputs.length; i++) {
     _addListener(inputs[i], 'keydown', _keyDownHandler);
@@ -41,7 +41,7 @@ app.initiator = function (options) {
 
   /**
    * cross browser event listener
-   * @param {DOM object} element - the element to bind events on
+   * @param {node} element - the element to bind events on
    * @param {event} type - the type of event to be bound
    * @param {function} expression - the event listener
    */
@@ -61,10 +61,10 @@ app.initiator = function (options) {
     //setting target
     textbox = e.target;
     parentElem = e.target.parentElement;
-    shadowElem = parentElem.getElementsByClassName('floatalk-input-cloner');
+    shadowElem = parentElem.getElementsByClassName('highlighter-clone');
     if(shadowElem.length == 0) {
       shadowElem = document.createElement('div');
-      shadowElem.classList.add('floatalk-input-cloner');
+      shadowElem.classList.add('highlighter-clone');
       parentElem.appendChild(shadowElem);
     } else {
       shadowElem = shadowElem[0];
@@ -79,7 +79,7 @@ app.initiator = function (options) {
     //if typing characters
     keySequence = false;
     if(!menuFlag) {
-        _valueHandler(e);
+      _valueHandler(e);
     } else {
       e.preventDefault();
       menuHandler(e);
@@ -88,7 +88,7 @@ app.initiator = function (options) {
 
   /**
    * keyDownHandler: check if arrwkeys are pressed, then selecting starts
-   *@param {event} event - keydown input event
+   *@param {event} e - keydown input event
    */
   function _keyDownHandler (e) {
     if (keySequence) {
@@ -96,15 +96,16 @@ app.initiator = function (options) {
     } else {
       keySequence = true;
     }
-    
+
   }
 
   /**
    * valueHandler: checks entire value for mentioning
-   *@param {event} event - 
+   *@param {event} e -
    */
   function _valueHandler (e) {
     var value = e.target.value;
+    console.log(value);
     _shadowHandler(e);
     if (rehash.test(value)) {
       menuFlag = true;
@@ -118,6 +119,7 @@ app.initiator = function (options) {
     } else if (e.keyCode == keyCodes.upArrow) {
       move(-1);
     } else {
+      console.log('suggest');
       _suggest(e);
     }
     //this moves the .selected class over list items
@@ -142,7 +144,7 @@ app.initiator = function (options) {
 
   /**
    * suggest: open a list of suggested usernames
-   *@param {event} event - keydown input event
+   *@param {event} e - keydown input event
    */
   function _suggest (e) {
 
@@ -158,10 +160,11 @@ app.initiator = function (options) {
       e.target.value = _setUser (e.target.value, value, app.list.getElementsByClassName('selected')[0].getAttribute('username'));
       _closeMenu();
     }
+    console.log('>>', reSuggest, value, reSuggest.test(value));
     if ( reSuggest.test(value) ) {
-     _getUser(value, function (userList) {
-       _createList(userList);
-     });
+      _getUser(value, function (userList) {
+        _createList(userList);
+      });
     } else if (app.list) {
       _closeMenu();
     }
@@ -217,11 +220,12 @@ app.initiator = function (options) {
    *@param {array} users - list of objects with displayName/username keys
    */
   function _createList (users) {
-    app.list = parentElem.getElementsByClassName('floatalk-suggested-user-List');
+    console.log('create list');
+    app.list = parentElem.getElementsByClassName('highlighter-List');
 
     if (app.list.length == 0) {
       app.list = document.createElement('ul');
-      app.list.classList.add('floatalk-suggested-user-List');
+      app.list.classList.add('highlighter-List');
       parentElem.appendChild(app.list);
     } else {
       app.list = app.list[0];
@@ -230,10 +234,10 @@ app.initiator = function (options) {
     app.list.innerHTML = '';
     for (var i = 0; i < users.length; i++) {
       var item = document.createElement('li');
-          item.innerHTML = users[i].username;
-          item.setAttribute('username', users[i].username);
-          item.setAttribute('displayname', users[i].displayName);
-          _addListener(item, 'click', _setUser);
+      item.innerHTML = users[i].username;
+      item.setAttribute('username', users[i].username);
+      item.setAttribute('displayname', users[i].displayName);
+      _addListener(item, 'click', _setUser);
       if(i == 0) {
         item.className = 'selected';
       }
@@ -266,15 +270,15 @@ app.initiator = function (options) {
 
   // functions related to shadow
   function getSelectionText() {
-      var text = "";
-      if (window.getSelection) {
-        text = window.getSelection().toString();
-      } else if (document.selection && document.selection.type != "Control") {
-        text = document.selection.createRange().text;
-      }
-      return text;
+    var text = "";
+    if (window.getSelection) {
+      text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+      text = document.selection.createRange().text;
+    }
+    return text;
   }
-  
+
 
   function _shadowHandler (e) {
     var temp = null;
@@ -283,38 +287,36 @@ app.initiator = function (options) {
     var mentionItem = null;
     var markedupCollection = value.match(rehash) || [];
     app.markedupText = value.replace(rehash, hashTemplate);
-    
 
-  if(!isHighlighting) {
-    for (var i = 0; i < mentionCollection.length; i++) {
-      if (app.markedupText.indexOf(mentionCollection[i].template) == -1) {
-        mentionCollection.splice(i, 1);
-      }
-    };
-  }
 
-  for (var i = 0; i < markedupCollection.length; i++) {
-    removeItem = i;
-    for (var j = 0; j < mentionCollection.length; j++) {
-        if (mentionCollection[j].username == markedupCollection[i].split(options.sign)[1] ) {
-        removeItem = -1;
-        break;
-      }
-    };
-
-    if (removeItem != -1) {
-      
-      temp = markedupCollection[removeItem].replace(rehash, hashTemplate);
-      app.markedupText = app.markedupText.replace(temp, markedupCollection[removeItem]);
-      removeItem = -1;
+    if(!isHighlighting) {
+      for (var i = 0; i < mentionCollection.length; i++) {
+        if (app.markedupText.indexOf(mentionCollection[i].template) == -1) {
+          mentionCollection.splice(i, 1);
+        }
+      };
     }
-  }
-    
+
+    for (var i = 0; i < markedupCollection.length; i++) {
+      removeItem = i;
+      for (var j = 0; j < mentionCollection.length; j++) {
+        if (mentionCollection[j].username == markedupCollection[i].split(options.sign)[1] ) {
+          removeItem = -1;
+          break;
+        }
+      };
+
+      if (removeItem != -1) {
+
+        temp = markedupCollection[removeItem].replace(rehash, hashTemplate);
+        app.markedupText = app.markedupText.replace(temp, markedupCollection[removeItem]);
+        removeItem = -1;
+      }
+    }
+
     shadowElem.innerHTML = app.markedupText;
     isHighlighting = false;
   }
 
 
-}// end
-
-
+}
